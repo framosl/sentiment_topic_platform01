@@ -1,9 +1,18 @@
-FROM python:3.10
+FROM python:3.11-slim
 
 WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip
+
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . .
 
-RUN pip install -r requirements.txt
-RUN python -m spacy download es_core_news_sm
+EXPOSE 8501
 
-CMD uvicorn api:app --host 0.0.0.0 --port ${PORT:-8000}
+CMD ["streamlit", "run", "dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
