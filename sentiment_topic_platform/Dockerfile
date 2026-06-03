@@ -14,5 +14,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD sh -c "streamlit run dashboard.py --server.port=${PORT:-8080} --server.address=0.0.0.0"
-
+CMD streamlit run dashboard.py --server.address=0.0.0.0
