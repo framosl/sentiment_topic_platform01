@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from wordcloud import WordCloud
 import requests
-from bertopic import BERTopic
+# from bertopic import BERTopic
 
 # -----------------------------
 # CONFIG
@@ -217,46 +217,11 @@ with tab2:
     else:
         st.warning("No hay suficiente texto")
 
-# -----------------------------
-# TAB 3
-# -----------------------------
-@st.cache_resource
-def load_topic_model():
-    return BERTopic(
-        language="multilingual",
-        verbose=False
-    )
-
-topic_model = load_topic_model()
-
 with tab3:
 
     st.subheader("Modelado de tópicos")
 
-    docs = (
-        df["review"]
-        .dropna()
-        .astype(str)
-        .tolist()
-    )
-
-    docs = docs[:150]
-
-    if len(docs) < 10:
-
-        st.warning("Muy pocos datos")
-
-    else:
-
-        with st.spinner("Analizando tópicos..."):
-
-            topics, probs = topic_model.fit_transform(docs)
-
-            info = topic_model.get_topic_info()
-
-        st.success("Tópicos generados")
-
-        st.dataframe(info, width="stretch")
+    st.info("BERTopic deshabilitado temporalmente en Railway por consumo de memoria.")
 
 # -----------------------------
 # TAB 4
