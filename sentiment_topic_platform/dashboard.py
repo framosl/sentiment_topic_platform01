@@ -16,7 +16,7 @@ import requests
 # CONFIG
 # -----------------------------
 st.set_page_config(
-    page_title="Sentiment Analytics PRO",
+    page_title="Sentiment Analytics ",
     layout="wide",
     page_icon="📊"
 )
@@ -163,33 +163,28 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # -----------------------------
 # TAB 1
 # -----------------------------
-#with tab1:
+with tab1:
 
-#    st.subheader("Distribución de sentimientos")
+    st.subheader("Distribución de sentimientos")
 
-#    fig = px.pie(
-#       df,
-#        names="sentiment",
-#        hole=0.45,
-#        title="Distribución"
-#    )
+    fig = px.pie(
+       df,
+        names="sentiment",
+        hole=0.45,
+        title="Distribución"
+    )
 
-#    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, width="stretch")
 
-#    bar = px.bar(
-#        x=df["sentiment"].value_counts().index,
-#        y=df["sentiment"].value_counts().values,
-#        labels={"x": "Sentimiento", "y": "Cantidad"},
-#        title="Cantidad por sentimiento"
-#    )
+    bar = px.bar(
+        x=df["sentiment"].value_counts().index,
+        y=df["sentiment"].value_counts().values,
+        labels={"x": "Sentimiento", "y": "Cantidad"},
+        title="Cantidad por sentimiento"
+    )
 
-#    st.plotly_chart(bar, width="stretch")
+    st.plotly_chart(bar, width="stretch")
 
-with tab3:
-
-    st.subheader("Modelado de tópicos")
-
-    st.info("BERTopic deshabilitado temporalmente en Railway por consumo de memoria.")
 # -----------------------------
 # TAB 2
 # -----------------------------
@@ -225,43 +220,49 @@ with tab2:
 # -----------------------------
 # TAB 3
 # -----------------------------
-@st.cache_resource
-def load_topic_model():
-    return BERTopic(
-        language="multilingual",
-        verbose=False
-    )
+#@st.cache_resource
+#def load_topic_model():
+#    return BERTopic(
+#        language="multilingual",
+#        verbose=False
+#    )
 
-topic_model = load_topic_model()
+#topic_model = load_topic_model()
+
+#with tab3:
+
+#    st.subheader("Modelado de tópicos")
+
+#    docs = (
+#        df["review"]
+#        .dropna()
+#        .astype(str)
+#        .tolist()
+#    )
+
+#    docs = docs[:150]
+
+#    if len(docs) < 10:
+
+#        st.warning("Muy pocos datos")
+
+#    else:
+
+#        with st.spinner("Analizando tópicos..."):
+
+#            topics, probs = topic_model.fit_transform(docs)
+
+#            info = topic_model.get_topic_info()
+
+#        st.success("Tópicos generados")
+
+#        st.dataframe(info, width="stretch")
 
 with tab3:
 
     st.subheader("Modelado de tópicos")
 
-    docs = (
-        df["review"]
-        .dropna()
-        .astype(str)
-        .tolist()
-    )
-
-    docs = docs[:150]
-
-    if len(docs) < 10:
-
-        st.warning("Muy pocos datos")
-
-    else:
-
-        with st.spinner("Analizando tópicos..."):
-
-            topics, probs = topic_model.fit_transform(docs)
-
-            info = topic_model.get_topic_info()
-
-        st.success("Tópicos generados")
-
-        st.dataframe(info, width="stretch")
+    st.info("BERTopic deshabilitado temporalmente en Railway por consumo de memoria.")
 
 # -----------------------------
 # TAB 4
