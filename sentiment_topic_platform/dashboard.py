@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from wordcloud import WordCloud
 import requests
-from bertopic import BERTopic
+# from bertopic import BERTopic
 
 # -----------------------------
 # CONFIG
@@ -163,28 +163,33 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # -----------------------------
 # TAB 1
 # -----------------------------
-with tab1:
+#with tab1:
 
-    st.subheader("Distribución de sentimientos")
+#    st.subheader("Distribución de sentimientos")
 
-    fig = px.pie(
-        df,
-        names="sentiment",
-        hole=0.45,
-        title="Distribución"
-    )
+#    fig = px.pie(
+#       df,
+#        names="sentiment",
+#        hole=0.45,
+#        title="Distribución"
+#    )
 
-    st.plotly_chart(fig, width="stretch")
+#    st.plotly_chart(fig, width="stretch")
 
-    bar = px.bar(
-        x=df["sentiment"].value_counts().index,
-        y=df["sentiment"].value_counts().values,
-        labels={"x": "Sentimiento", "y": "Cantidad"},
-        title="Cantidad por sentimiento"
-    )
+#    bar = px.bar(
+#        x=df["sentiment"].value_counts().index,
+#        y=df["sentiment"].value_counts().values,
+#        labels={"x": "Sentimiento", "y": "Cantidad"},
+#        title="Cantidad por sentimiento"
+#    )
 
-    st.plotly_chart(bar, width="stretch")
+#    st.plotly_chart(bar, width="stretch")
 
+with tab3:
+
+    st.subheader("Modelado de tópicos")
+
+    st.info("BERTopic deshabilitado temporalmente en Railway por consumo de memoria.")
 # -----------------------------
 # TAB 2
 # -----------------------------
