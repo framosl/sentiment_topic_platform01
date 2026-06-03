@@ -251,25 +251,23 @@ with tab5:
 
         if user_text.strip():
 
-            try:
+            texto = user_text.lower()
 
-                response = requests.post(
-                    "http://127.0.0.1:8000/analyze",
-                    json={"text": user_text}
-                )
+            if "excelente" in texto or "bueno" in texto:
+                sentiment = "positivo"
 
-                result = response.json()
+            elif "malo" in texto or "terrible" in texto:
+                sentiment = "negativo"
 
-                st.success("Análisis completado")
+            else:
+                sentiment = "neutral"
 
-                st.json(result)
+            st.success("Análisis completado")
 
-            except Exception as e:
-
-                st.error("❌ API no disponible")
-
-                st.code(str(e))
+            st.json({
+                "texto": user_text,
+                "sentimiento": sentiment
+            })
 
         else:
-
             st.warning("Escribe texto primero")
