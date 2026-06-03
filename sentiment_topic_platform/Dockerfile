@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8501
+EXPOSE 8080
 
-CMD streamlit run dashboard.py --server.port $PORT --server.address 0.0.0.0
+CMD sh -c "streamlit run dashboard.py --server.port=${PORT:-8080} --server.address=0.0.0.0"
+
