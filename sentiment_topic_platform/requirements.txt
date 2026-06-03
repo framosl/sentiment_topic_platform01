@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pydantic
+transformers
+torch
+spacy
+nltk
+bertopic
+pandas
+wordcloud
+matplotlib
+streamlit
+datasets
+deep_translator
+requests
