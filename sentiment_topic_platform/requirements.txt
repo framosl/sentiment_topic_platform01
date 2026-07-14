@@ -13,3 +13,4 @@ streamlit
 datasets
 deep_translator
 requests
+python-pptx
