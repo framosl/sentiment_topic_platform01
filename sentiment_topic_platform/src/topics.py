@@ -4,7 +4,14 @@ import pandas as pd
 class TopicExtractor:
     def __init__(self, n_topics=10):
         # BERTopic > LDA para textos cortos como reseñas
-        self.model = BERTopic(verbose=True, nr_topics=n_topics)
+        # Forzamos la creación de tópicos con grupos más pequeños (min_topic_size=3)
+        # y le indicamos explícitamente que los textos están en español/multilingüe.
+        self.model = BERTopic(
+            verbose=True, 
+            nr_topics=n_topics,
+            min_topic_size=3,
+            language="multilingual"
+        )
         self.fitted = False
     
     def fit(self, texts):
