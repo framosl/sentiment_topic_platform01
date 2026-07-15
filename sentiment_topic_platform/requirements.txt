@@ -16,3 +16,6 @@ requests
 python-pptx
 torchvision
 google-generativeai
+fpdf2
+weasyprint
+kaleido

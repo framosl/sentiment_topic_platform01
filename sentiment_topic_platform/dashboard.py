@@ -18,6 +18,9 @@ from wordcloud import WordCloud
 import requests
 from bertopic import BERTopic
 import google.generativeai as genai
+from fpdf import FPDF
+from pdf_report import generar_agente_pdf_ia
+from pdf_report import *
 
 # Configuramos la IA leyendo la clave secreta de forma segura
 try:
@@ -464,6 +467,122 @@ with st.container(border=True):
                 use_container_width=True
             )
 
+# -----------------------------
+# Generador de PDF con IA
+# -----------------------------
+# --- INYECCIÓN DE DISEÑO CSS (TEMA OSCURO) ---
+st.markdown("""
+<style>
+    /* Estilo premium para el botón (Azul brillante que resalta en fondo oscuro) */
+    div.stButton > button {
+        background-color: #1976d2; 
+        color: white;
+        border-radius: 8px;
+        border: none;
+        padding: 10px 24px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    /* Efecto al pasar el mouse por el botón */
+    div.stButton > button:hover {
+        background-color: #42a5f5; /* Azul más claro y llamativo */
+        box-shadow: 0 4px 12px rgba(66, 165, 245, 0.5);
+        transform: translateY(-2px);
+        color: white;
+    }
+    /* Estilo para la caja de texto (Fondo oscuro, borde sutil y letra blanca) */
+    div.stTextArea > div > div > textarea {
+        border-radius: 8px;
+        border: 1px solid #4a5a6a;
+        background-color: #1e2532; 
+        color: #ffffff !important; 
+    }
+    /* Letra del label de la caja de texto (Gris claro para perfecta legibilidad) */
+    .stTextArea label {
+        font-weight: bold !important;
+        color: #e0e0e0 !important; 
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --- INTERFAZ DEL AGENTE IA ---
+st.markdown("---")
+
+# Usamos un contenedor para agrupar visualmente la sección
+with st.container():
+    # Título en celeste pastel para que brille sobre el fondo oscuro
+    st.markdown("<h3 style='color: #90caf9;'>🤖 Agente Analista IA con Exportación PDF</h3>", unsafe_allow_html=True)
+    st.write("Escribe qué necesitas saber de la base de datos y la IA filtrará las categorías para armar tu documento corporativo.")
+    
+    st.write("") # Espacio en blanco
+    
+    # Dividimos la pantalla en dos columnas
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        instruccion = st.text_area(
+            "📝 Instrucciones para el Agente Autónomo:",
+            placeholder="Ej: Dame un informe de todas las reseñas negativas de la categoría libros y propón soluciones.",
+            height=120
+        )
+        
+    with col2:
+        st.write("") 
+        st.write("")
+        st.write("")
+        st.write("")
+        # Botón alineado a la derecha
+        btn_generar = st.button("🚀 Generar Reporte IA", use_container_width=True)
+
+# --- LÓGICA DE GENERACIÓN CON MANEJO DE ERRORES ---
+if btn_generar:
+    if instruccion:
+        with st.spinner("Procesando la base de datos y maquetando el PDF..."):
+            
+            # Tomamos una muestra para no exceder el límite de la API
+            cantidad_muestra = min(150, len(df))
+            datos_csv = df.sample(cantidad_muestra).to_csv(index=False)
+            
+            try:
+                # Intentamos llamar a tu función de PDF
+                pdf_bytes = generar_agente_pdf_ia(instruccion, datos_csv)
+                
+                st.success("¡Análisis completado y PDF generado con éxito!")
+                
+                # Colocamos el botón de descarga centrado
+                _, col_center, _ = st.columns([1, 2, 1])
+                with col_center:
+                    st.download_button(
+                        label="📥 Descargar Documento Final",
+                        data=bytes(pdf_bytes),
+                        file_name="Agente_Inteligente_Reporte.pdf",
+                        mime="application/pdf",
+                        use_container_width=True
+                    )
+                    
+            except Exception as e:
+                # Si ocurre un error, lo atrapamos aquí en la variable 'e'
+                error_str = str(e)
+                
+                # Verificamos si es el error de cuota de Gemini (429 ResourceExhausted)
+                if "429" in error_str or "Quota exceeded" in error_str:
+                    
+                    # Buscamos el texto exacto de los segundos en el mensaje de Google
+                    match = re.search(r'Please retry in (\d+\.?\d*)s', error_str)
+                    
+                    if match:
+                        # Extraemos el número, lo convertimos a entero para redondearlo
+                        segundos = int(float(match.group(1))) + 1
+                        st.warning(f"⏳ **¡Modo de enfriamiento activo!** La IA ha procesado muchas peticiones seguidas. Por favor, espera **{segundos} segundos** y vuelve a dar clic al botón.")
+                    else:
+                        st.warning("⏳ **¡Modo de enfriamiento activo!** Límite de consultas rápidas alcanzado. Por favor, espera un minuto y vuelve a intentar.")
+                
+                else:
+                    # Si es otro tipo de error diferente al de la cuota, lo mostramos normal
+                    st.error(f"❌ Ocurrió un error inesperado al generar el reporte: {error_str}")
+                    
+    else:
+        st.warning("Por favor, dale una instrucción al agente antes de comenzar.")
 
 # -----------------------------
 # TAB 3: MINERÍA DE TEXTO
