@@ -2,15 +2,20 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# 1. Instalar dependencias del sistema operativo
+# 1. Instalar dependencias del sistema operativo (Incluye las gráficas para WeasyPrint)
 RUN apt-get update && apt-get install -y \
     build-essential \
     libgomp1 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libcairo2 \
+    shared-mime-info \
+    libgdk-pixbuf2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
-# 2. Instalar las librerías de Python (Aquí se instalará python-pptx)
+# 2. Instalar las librerías de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 3. !! NUEVO: Descargar el modelo de lenguaje en español para spaCy !!
