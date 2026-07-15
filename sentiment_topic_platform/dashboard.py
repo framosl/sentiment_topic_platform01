@@ -22,13 +22,6 @@ from fpdf import FPDF
 from pdf_report import generar_agente_pdf_ia
 from pdf_report import *
 
-# Configuramos la IA leyendo la clave secreta de forma segura
-#try:
-#    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-#except Exception as e:
-#    st.error(f"🚨 Error de configuración: {e}") # <-- Agrega esta línea
-#    st.warning("⚠️ El sistema de IA Generativa está en pausa. Configura tu GEMINI_API_KEY en .streamlit/secrets.toml")
-
 # Configuramos la IA buscando primero en los secretos de Streamlit, 
 # y si no, buscamos en las variables de entorno de Railway
 api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
@@ -39,6 +32,7 @@ else:
     st.error("❌ Error de configuración: No se encontró la clave de la API.")
     st.warning("⚠️ El sistema de IA Generativa está en pausa. Configura tu GEMINI_API_KEY en Railway.")
     st.stop() # Detiene la ejecución del dashboard para que no intente usar la IA
+
 # -----------------------------
 # CONFIGURACIÓN Y ESTILOS
 # -----------------------------
